@@ -1,0 +1,27 @@
+# Demo 4: Unit Testing - Prompts
+
+## Prompt 1: Generate Basic Tests
+Generate Pest tests with Mockery for this service method. Cover the happy path, null input, and empty string scenarios. Use PHP 8.3.
+
+```php
+class BookService
+{
+    public function __construct(
+        private readonly BookRepository $repository,
+    ) {}
+
+    public function findBooksByAuthor(string $author): array
+    {
+        if (trim($author) === '') {
+            return [];
+        }
+        return $this->repository->searchByAuthor($author);
+    }
+}
+```
+
+## Prompt 2: Fix Tests (if needed)
+Fix the test for empty string input. The service should return an empty array when author is null or empty. Update the Mockery expectations accordingly.
+
+## Prompt 3: Add Edge Cases
+Add tests for edge cases: author with only whitespace, author not found (empty result), and repository throws exception.

@@ -1,0 +1,16 @@
+# Demo 1: Laravel Generation - Prompts
+
+## Prompt 1: Generate Model
+Generate a Laravel 11 Eloquent model for a Book with the following fields:
+- id: bigint, primary key, auto-increment
+- title: string, required
+- author: string, required
+- isbn: string, unique, required
+- published_year: integer, nullable
+Use PHP 8.3 and include the migration with proper column definitions.
+
+## Prompt 2: Add Repository and Service
+Now generate an Eloquent repository class for this Book model, and a service class with a method to find all books. Use constructor injection via the Laravel container, not facades. Return a JsonResponse with the book collection.
+
+## Prompt 3: Refine for Team Style
+Update the service method to use an API Resource for the response. Use proper HTTP status codes. Include error handling for empty results. Follow PSR-12 coding standards.

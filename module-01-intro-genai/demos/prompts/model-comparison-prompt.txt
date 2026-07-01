@@ -1,0 +1,1 @@
+Write a small PHP function that takes an array of strings and returns an associative array of string → length, using only built-in PHP functions. Prefer PHP 8.3 style if applicable.

@@ -1,0 +1,15 @@
+# Demo 2: Legacy Code Explanation - Prompts
+
+## Prompt 1: What does this do?
+Explain what this code does step by step. Break down each part and explain the functionality.
+
+[Paste legacy code snippet from code-samples/LegacyUserBean.php here]
+
+## Prompt 2: Why was it written this way?
+Why might this code have been written this way? What patterns or frameworks does it use? What was common at the time?
+
+## Prompt 3: Modern equivalent
+What would be the modern Laravel 11 equivalent of this code? Show a simple example using a Form Request for validation and typed properties.
+
+## Prompt 4: Risks
+What are the risks or dependencies if I try to refactor this code? What might break?

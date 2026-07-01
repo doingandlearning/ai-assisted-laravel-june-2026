@@ -1,0 +1,41 @@
+# Refinement examples — iterative prompt debugging
+
+## Round 1: Initial prompt (produces poor output)
+
+**Prompt:**
+Generate a Laravel controller for User
+
+**Typical poor output (use as backup if live run fails):**
+- Uses `app()` helper or facades instead of constructor injection
+- Laravel 8 / older style (e.g. no typed returns, no Form Requests)
+- No error handling; may return raw null or no status code
+- Single endpoint, no clarity on status codes or empty-list behaviour
+
+**Diagnosis:**
+- What's missing? — Version (Laravel 11?), error handling, response type
+- What's wrong? — No constructor injection, old patterns
+- What would make it better? — Add context (Laravel 11, PHP 8.3) and constraints (constructor injection, JsonResponse, error handling)
+
+---
+
+## Round 1: Refined prompt (after first iteration)
+
+**Prompt:**
+Generate a Laravel 11 API controller using PHP 8.3. Use constructor injection via the service container, return JsonResponse with a typed array of User models, and include proper error handling. Don't return null — return an appropriate HTTP status code instead.
+
+**What we added:**
+- Context: Laravel 11, PHP 8.3
+- Constraint: Constructor injection via service container
+- Constraint: JsonResponse with typed User array, proper error handling
+- Constraint: Don't return null — use status codes
+
+---
+
+## Round 2 (optional): Second iteration — fix one more thing
+
+**Problem:** The generated controller returns 404 when the user list is empty. We want 200 with an empty array.
+
+**Refined prompt (add to previous):**
+For an empty list, return 200 OK with an empty array in the body, not 404.
+
+**Lesson:** Iterative refinement often takes 2–3 rounds. Read the output, pick one concrete fix, add it to the prompt, re-run.

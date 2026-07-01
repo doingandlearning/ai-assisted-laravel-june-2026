@@ -1,0 +1,42 @@
+# post to ollama to generate a response using the codellama model
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+    "model": "codellama",
+    "prompt": "What is the capital of France?"
+}
+
+###
+
+# give me a non-streaming response using the codellama model
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+    "model": "codellama",
+    "prompt": "Give me a PHP function that calculates the first 12 fibonacci numbers"
+}
+
+###
+
+# do the same with qwen3
+POST http://localhost:11434/api/generate
+Content-Type: application/json
+
+{
+    "model": "qwen3:30b",
+    "prompt": "Give me a PHP function that calculates the first 12 fibonacci numbers",
+    "stream": false
+}
+
+###
+# do an openai call 
+POST https://api.openai.com/v1/chat/completions
+Content-Type: application/json
+
+{
+    "model": "gpt-4o-mini",
+    "messages": [{"role": "user", "content": "Tell me about Didcot"}],
+    "max_tokens": 500
+}

@@ -1,0 +1,29 @@
+# Few-shot examples
+
+## Zero-shot (no examples)
+Generate a Laravel API controller for Product
+
+## Few-shot (with example)
+Generate a controller like this:
+```php
+<?php
+
+namespace App\Http\Controllers\Api;
+
+use App\Http\Controllers\Controller;
+use App\Services\ProductService;
+use Illuminate\Http\JsonResponse;
+
+class ProductController extends Controller
+{
+    public function __construct(
+        private readonly ProductService $service,
+    ) {}
+
+    public function index(): JsonResponse
+    {
+        return response()->json($this->service->getAll());
+    }
+}
+```
+Now generate another one for User.

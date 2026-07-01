@@ -1,0 +1,10 @@
+# Three prompts: vague → clear → constrained
+
+## Prompt 1: Vague
+Write some code for Laravel
+
+## Prompt 2: Clear
+Generate a Laravel API controller with one GET endpoint that returns a list of users
+
+## Prompt 3: Clear + Context + Constraints
+Generate a Laravel 11 API controller using PHP 8.3. Use constructor injection via the service container, return JsonResponse with a typed array of User models, and include proper error handling. Don't return null — return an appropriate HTTP status code instead.

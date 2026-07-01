@@ -1,0 +1,5 @@
+Summarise the breaking changes in Laravel 12.0.
+
+What's the exact signature of JsonResponse::fromJsonString() in Laravel 11?
+
+How do I use Laravel's cache tags with Redis? Give the exact config key and one example.

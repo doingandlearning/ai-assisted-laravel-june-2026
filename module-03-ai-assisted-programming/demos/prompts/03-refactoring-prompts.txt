@@ -1,0 +1,20 @@
+# Demo 3: Refactoring - Prompts
+
+## Prompt: Refactor to Collections
+Refactor this method to use Laravel collections and PHP 8.3 type hints. Replace the nested loops with collection methods, extract null checks into filters, and improve readability. Maintain the exact same behavior — the method should return the same results.
+
+```php
+public function getActiveUserEmails(array $users): array
+{
+    $emails = [];
+    foreach ($users as $user) {
+        if ($user !== null && $user->isActive() && trim((string) $user->getEmail()) !== '') {
+            $emails[] = $user->getEmail();
+        }
+    }
+    return $emails;
+}
+```
+
+## If Refactoring Breaks Test: Fix Prompt
+Fix the refactoring — the test expects the method to return emails for active users only, filtering out null users and empty emails. The refactored version should maintain this exact behavior.

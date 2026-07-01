@@ -1,0 +1,1 @@
+In one short paragraph, explain the difference between route model binding and manual ID lookup in a Laravel API controller. We use Laravel 11 and PHP 8.3.
