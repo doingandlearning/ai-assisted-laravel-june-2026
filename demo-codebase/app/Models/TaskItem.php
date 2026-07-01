@@ -24,6 +24,8 @@ class TaskItem
 
     public int $ownerId;
 
+    public ?int $assigneeId = null;
+
     public function __construct()
     {
         $this->createdAt = Carbon::now('UTC');

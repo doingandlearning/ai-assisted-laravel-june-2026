@@ -21,6 +21,7 @@ class TaskResource extends JsonResource
             'created_at' => $this->resource['created_at'],
             'completed_at' => $this->resource['completed_at'],
             'owner_id' => $this->resource['owner_id'],
+            'assignee_id' => $this->resource['assignee_id'],
         ];
     }
 }

@@ -140,6 +140,7 @@ class InMemoryTaskRepository implements TaskRepositoryInterface
             'created_at' => $task->createdAt->toIso8601String(),
             'completed_at' => $task->completedAt?->toIso8601String(),
             'owner_id' => $task->ownerId,
+            'assignee_id' => $task->assigneeId,
         ];
     }
 
@@ -159,6 +160,9 @@ class InMemoryTaskRepository implements TaskRepositoryInterface
             ? Carbon::parse((string) $row['completed_at'])
             : null;
         $task->ownerId = (int) $row['owner_id'];
+        $task->assigneeId = isset($row['assignee_id']) && $row['assignee_id'] !== null
+            ? (int) $row['assignee_id']
+            : null;
 
         return $task;
     }

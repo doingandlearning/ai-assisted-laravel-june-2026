@@ -27,43 +27,49 @@ Four things by the end of this morning:
 - How to treat context as a first-class concern — not an afterthought
 
 <!-- end_slide -->
-
 ## Shared vocabulary
 
 Before anything else, let's align on terms.
-
-**LLM** — Large Language Model. 
-
+<!-- column_layout: [1, 1] -->
+<!-- column: 0 -->
+LLM — Large Language Model.
 <!-- pause -->
-
 A model trained on text to predict likely next tokens. Not a database. Not a search engine. Not a reasoning engine (despite appearances).
 
-**Prompt**
-
+Prompt
 <!-- pause -->
-
 The input you give the model. Everything it knows about your task comes from this.
 
-**Context window**
-
+Context window
 <!-- pause -->
-
 How much the model can "see" at once. Older models: ~4K tokens. Modern models: 128K–1M+. Matters for code-heavy tasks.
 
-**Hallucination** 
+Harness
 
+The scaffolding around the model — prompts, tools, retries, memory, orchestration. Most of what makes an LLM product "smart" lives here, not in the model itself.
+
+
+Memory recall
+
+The mechanism by which a system retains and retrieves information across turns or sessions — since the model itself is stateless, this lives entirely in the harness, not the LLM.
+<!-- column: 1 -->
+Hallucination
 <!-- pause -->
-
 Confident, fluent output that is factually wrong. A property of how these models work, not a bug to be fixed.
 
-**Grounding**
-
+Grounding
 <!-- pause -->
-
 Anchoring model output to real, verifiable sources (your codebase, docs, tests).
 
-<!-- end_slide -->
+Tokens
+<!-- pause -->
+The chunks of text a model reads and writes. Not words, not characters — sub-word pieces (e.g. "tokenization" → "token" + "iza" + "tion"). Roughly 0.75 words per token in English.
 
+Guard rails
+
+Constraints placed around model input and output — input filtering, output validation, allow/deny lists, human-in-the-loop checks. They catch what the model itself won't reliably catch on its own.
+<!-- reset_layout -->
+<!-- end_slide -->
 ## The LLM landscape
 
 Multiple **model families**: GPT-4, Claude, Gemini, Llama...
@@ -217,7 +223,7 @@ That is proprietary system architecture. Public AI tools may retain it. It goes 
 
 ## Exercise
 
-- Write down three daily tasks that you would feel comrtable relying on AI for
+- Write down three daily tasks that you would feel comfortable relying on AI for
 
 - Write down three daily tasks that you wouldn't use AI for (or at least be cautious)
 
@@ -234,6 +240,15 @@ A developer on your team asks AI:
 The output is generic boilerplate — a Hello World controller, nothing close to what they needed.
 
 **Type in chat: what's the single most important thing missing from that prompt?**
+
+- Context
+    - What to do?
+    - Why?
+    - What exists already?
+    - Version
+    - Testing strategy
+    - Platform
+- Task
 
 <!-- end_slide -->
 

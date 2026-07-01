@@ -12,6 +12,12 @@ Their code works. But their prompts are still vague, the output often needs rewo
 
 **Type in chat: what's the one thing you'd tell them to do differently?**
 
+- Struture prompts
+- Review output
+- Provide more context
+- Design agent skills
+- Deny code changes w/o clear instructions
+- Ask questions
 <!-- end_slide -->
 
 ## Three surfaces, three mental models

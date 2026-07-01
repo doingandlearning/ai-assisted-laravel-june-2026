@@ -14,7 +14,8 @@ class TaskService
 {
     public function __construct(
         private readonly TaskRepositoryInterface $repository,
-    ) {}
+    ) {
+    }
 
     /**
      * @param  array<string, mixed>  $data
@@ -58,7 +59,7 @@ class TaskService
 
         $tasks = $this->repository->getByOwner($ownerId, $priorityFilter);
 
-        return array_map(fn (TaskItem $task) => $this->mapToArray($task), $tasks);
+        return array_map(fn(TaskItem $task) => $this->mapToArray($task), $tasks);
     }
 
     /**
@@ -80,6 +81,7 @@ class TaskService
                 'created_at' => Carbon::now('UTC')->toIso8601String(),
                 'completed_at' => null,
                 'owner_id' => 0,
+                'assignee_id' => null,
             ];
         }
 
@@ -120,7 +122,10 @@ class TaskService
             $existing->status = $parsedStatus;
 
             // NOTE FOR DEMO: Intentional bug — completed_at is not set when transitioning to Done.
-            // Use /fix with the failing Pest test to find and correct it.
+            if ($previousStatus !== TaskStatus::Done && $parsedStatus === TaskStatus::Done && $existing->completedAt === null) {
+                $existing->completedAt = Carbon::now('UTC');
+            }
+
             if ($previousStatus === TaskStatus::Done && $parsedStatus !== TaskStatus::Done) {
                 $existing->completedAt = null;
             }
@@ -133,9 +138,22 @@ class TaskService
         return $updated === null ? null : $this->mapToArray($updated);
     }
 
+    /**
+     * @return bool
+     */
     public function delete(int $id): bool
     {
-        return $this->repository->delete($id);
+        $existing = $this->repository->getById($id);
+
+        if ($existing === null) {
+            return false;
+        }
+
+        $this->repository->delete($existing);
+
+        Log::debug("Task with ID {$id} deleted.");
+
+        return true;
     }
 
     private function parsePriority(string $priority): Priority
@@ -174,6 +192,7 @@ class TaskService
             'created_at' => $task->createdAt->toIso8601String(),
             'completed_at' => $task->completedAt?->toIso8601String(),
             'owner_id' => $task->ownerId,
+            'assignee_id' => $task->assigneeId,
         ];
     }
 }
