@@ -2,8 +2,6 @@
 
 **A one-day instructor-led course for the Rabbies development team, delivered remotely via Microsoft Teams.**
 
-Prepared by Kevin Cunningham (via Indicia Training) — May 2026.
-
 ---
 
 ## What this course is
