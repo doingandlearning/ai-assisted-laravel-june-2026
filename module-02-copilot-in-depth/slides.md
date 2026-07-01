@@ -1,6 +1,6 @@
-# Three Ways to Work with AI
+# Copilot in Depth
 
-**Module 4 — GitHub Copilot for Laravel Developers**
+**Late morning session — AI-Assisted Development for Laravel Teams**
 
 <!-- end_slide -->
 
@@ -8,34 +8,29 @@
 
 A developer on your team has been using Copilot for a month. They use it constantly — but always the same way: type something, accept the suggestion, move on.
 
-Their code works. But their prompts are still vague, the output often needs reworking, and they've never used Chat or written a spec.
+Their code works. But their prompts are still vague, the output often needs reworking, and they've never used Chat or written a spec. They've never opened Copilot in the terminal.
 
 **Type in chat: what's the one thing you'd tell them to do differently?**
 
-- Pull out repeated/repetitive prompting
-- Make a file with constant constraints to adhere to and have it reference that
-- Pair programming/apprenticeship learning - watch/work alongside someone who is doing it well
-- If they hadn't written a spec - how they know they are understanding the goal?
-- Do you understand the requirements?
-
-
 <!-- end_slide -->
 
-## Three modes, three mental models
+## Three surfaces, three mental models
 
-| Mode | Where | Mental model |
+| Surface | Where | Mental model |
 |---|---|---|
 | Inline | Editor, as you type | You're driving. Copilot is suggesting. |
 | Chat | Copilot Chat panel | You're asking a colleague who can see your code. |
-| PRD-driven | Chat + a structured spec | You're the architect. Copilot is the developer. |
+| Terminal | Integrated terminal | You're asking someone who knows your shell. |
 
 <!-- pause -->
 
-Mixing them up is the most common source of frustration. Each one needs different input to work well.
+And across all three: **PRD-driven development** — writing a structured spec before you prompt for a feature.
+
+Mixing up which surface to use for which task is the most common source of frustration. Each one needs different input to work well.
 
 <!-- end_slide -->
 
-## Mode 1: Inline completion
+## Inline completion
 
 Copilot watches what you're typing and offers completions — a line, a method body, a block.
 
@@ -101,14 +96,14 @@ public function saveUser(UserDto $dto): ValidationResult
 
 <!-- end_slide -->
 
-## Mode 2: Copilot Chat
+## Copilot Chat
 
 A conversation with Copilot that has context about your workspace — open files, selected code, project structure.
 
 <!-- incremental_lists: true -->
 **Use Chat when you're thinking, not just writing:**
-- You need to understand something — `what does this method actually do?`
-- You're making a design decision — `should this be a service or a middleware?`
+- You need to understand something — "what does this method actually do?"
+- You're making a design decision — "should this be a service or a middleware?"
 - You're generating something complex — a full controller, a Pest test suite
 - You're stuck and want to think through options before committing
 
@@ -158,14 +153,112 @@ What's the likely cause, and how do I fix it?
 
 **Discussion — type in chat:** you're using `/fix` on a `delete` method that has three problems — a missing null check, `Carbon::now()` instead of `Carbon::now('UTC')`, and a missing ownership check. Does Copilot catch all three, or does it prioritise? Which would you most want it to catch?
 
+<!-- end_slide -->
+
+## Copilot in the terminal
+
+Copilot extends into the integrated terminal. It can suggest shell commands, explain output, and help debug command-line problems.
+
+**How to invoke it:**
+- `Ctrl+I` in the VS Code terminal opens inline chat
+- Describe what you want to do in plain English
+
+<!-- pause -->
+
+**Where it's useful in a Laravel workflow:**
+```
+# "How do I run only the failing tests in Pest?"
+./vendor/bin/pest --filter="it returns 404"
+
+# "What does this Artisan error mean?"
+# Paste the error output — Copilot reads it and suggests a fix
+
+# "Generate the Artisan command to create a model with migration and factory"
+php artisan make:model Book -mf
+```
+
+<!-- pause -->
+
+**The rule for terminal suggestions:** same as inline. Read before accepting. A wrong `php artisan migrate:fresh` on the wrong environment is not a prompt problem.
 
 <!-- end_slide -->
 
-## Mode 3: PRD-driven development
+## Copilot in a Laravel codebase: routing
+
+```php
+// Define a resource route group for the Books API
+// Only index, show, store, update, destroy
+```
+
+<!-- pause -->
+
+Copilot will suggest:
+```php
+Route::apiResource('books', BookController::class);
+```
+
+<!-- pause -->
+
+With more signal:
+```php
+// Scoped resource route: books belong to authors
+// Only show and store
+```
+
+Copilot suggests:
+```php
+Route::scopedResource('authors.books', BookController::class)
+    ->only(['show', 'store']);
+```
+
+<!-- end_slide -->
+
+## Copilot in a Laravel codebase: Eloquent
+
+The version signal matters. Without it, Copilot may generate Laravel 9-era patterns.
+
+```php
+// Laravel 11, PHP 8.3
+// Book model with typed properties
+// fillable: title, isbn, published_year, author_id
+```
+
+<!-- pause -->
+
+With that comment above the class, Copilot produces typed property declarations and PHP 8.3-appropriate patterns.
+
+Without it: you may get `$fillable = ['title', ...]` as an array with no type hints and `$dates` instead of `$casts`.
+
+<!-- end_slide -->
+
+## Copilot in a Laravel codebase: testing
+
+Copilot generates Pest tests well — when told explicitly.
+
+```
+Generate Pest tests for TaskService::updatePriority().
+Stack: Laravel 11, PHP 8.3, Pest, Mockery.
+Cover: happy path, task not found (null return), task owned by another user.
+Mock: TaskRepository.
+```
+
+<!-- pause -->
+
+The `/tests` slash command does this with less ceremony, but gives less control over which scenarios are covered.
+
+**Practical pattern:**
+1. `/tests` to generate the structure
+2. Chat follow-up to add specific scenarios the model missed
+3. Run them before trusting them
+
+<!-- end_slide -->
+
+## PRD-driven development
 
 Writing a structured specification and using it as the prompt for a complete, consistent feature.
+
 <!-- incremental_lists: true -->
-**Why the first two modes aren't enough for a full feature:**
+**Why inline and chat alone aren't enough for a full feature:**
 - Inline produces one line at a time
 - Chat produces one layer at a time
 - Without a shared spec, you get inconsistent naming, missing validation, fragmented error patterns
@@ -181,14 +274,12 @@ With a spec, every layer — Form Request, service, controller, tests — has th
 
 ## What a good PRD contains
 
-A PRD for Copilot needs four things:
+- **Stack and conventions** — version, injection style, patterns to follow
+- **Shape of the data** — request fields, types, constraints, response shape
+- **Behaviour as a list** — what it does step by step, including error cases
+- **Acceptance criteria** — specific, testable statements Copilot can generate tests against
+
 <!-- pause -->
-
-- **1. Stack and conventions** — version, injection style, patterns to follow
-- **2. Shape of the data** — request fields, types, constraints, response shape
-- **3. Behaviour as a list** — what it does step by step, including error cases
-- **4. Acceptance criteria** — specific, testable statements Copilot can generate tests against
-
 
 The acceptance criteria are the most important part. They're what the tests verify. If they're vague, the tests will be vague.
 
@@ -220,33 +311,6 @@ The acceptance criteria are the most important part. They're what the tests veri
 - [ ] Task owned by another user returns 403, not 404
 - [ ] Successful update returns 200 with the updated TaskResource
 ```
-
-<!-- end_slide -->
-
-## PRD format: user story
-
-```markdown
-## User Story: Update task priority
-
-**As a** project member
-**I want to** change the priority of a task I own
-**So that** I can reflect changing urgency without reassigning the task
-
-**Acceptance criteria:**
-- [ ] PATCH /api/tasks/{id}/priority accepts Low, Medium, or High
-- [ ] Returns 403 if the task belongs to another user — not 404
-- [ ] Returns 422 with field-level error if priority value is invalid
-- [ ] Returns 200 with updated TaskResource on success
-
-**Technical notes:**
-- Stack: Laravel 11+, Eloquent, Form Requests
-- Follow existing JSON error response shape
-- See TaskRepositoryInterface.php for the repository interface
-```
-
-<!-- pause -->
-
-Both formats work. The user story format is easier to share with non-technical stakeholders. The markdown spec format is easier for Copilot to generate consistent output from.
 
 <!-- end_slide -->
 
@@ -297,32 +361,18 @@ It will. The question is how to recover without starting again.
 
 <!-- pause -->
 
-**The principle:** treat divergence as a spec refinement task, not a prompt failure. Add the missing constraint to the spec so the next layer inherits it.
+**The principle:** treat divergence as a spec refinement task. Add the missing constraint to the spec so the next layer inherits it.
 
 <!-- end_slide -->
 
-## Iterating on the spec itself
+## Choosing your surface
 
-If the output keeps diverging in the same way, the spec is missing a constraint.
-
-**Common gaps:**
-
-- Error response shape not specified → add a `**Response format:**` section
-- Naming conventions not specified → add `Follow the naming in #file:TaskController.php`
-- Which layer owns which responsibility not specified → add to the behaviour list explicitly
-
-<!-- pause -->
-
-A spec that produces consistent output across all four layers on the first attempt is a well-written spec. Most take one or two iterations to get there. That's normal — and the refined spec is worth keeping.
-
-<!-- end_slide -->
-
-## Choosing your mode
-
-| Task | Mode |
+| Task | Surface |
 |---|---|
 | Writing a Form Request or model | Inline |
 | Completing a method you've started | Inline |
+| Running an Artisan command you can't remember | Terminal |
+| Debugging a shell error | Terminal |
 | Understanding what legacy code does | Chat `/explain` |
 | Diagnosing a bug | Chat `/fix` |
 | Generating a full service class | Chat |
@@ -330,22 +380,19 @@ A spec that produces consistent output across all four layers on the first attem
 | Building a feature across multiple files | PRD-driven |
 | Onboarding someone to a feature | PRD (spec as documentation) |
 
-<!-- pause -->
-
-**The underlying principle:** AI works best when it has constraints. Inline needs signal. Chat needs a well-framed question with the right files in scope. PRD-driven needs a spec that defines the shape before you ask for it.
-
 <!-- end_slide -->
 
 ## Summary
 
-1. **Inline** — use when you're writing and want completion; give it signal through names, comments, and patterns
-2. **Chat** — use when you're thinking; explore, explain, design, generate larger pieces with slash commands and `#file`
-3. **PRD-driven** — use when you're building a feature; write the spec first, generate in layers, treat divergence as a spec gap
+1. **Inline** — use when writing; give it signal through names, comments, and patterns; accept word by word
+2. **Chat** — use when thinking; explore, explain, design, generate larger pieces with slash commands and `#file`
+3. **Terminal** — use for shell tasks; describe what you want, read the suggestion before running it
+4. **PRD-driven** — use when building a feature; write the spec first, generate in layers, treat divergence as a spec gap
 
-The goal is not to use AI more. It's to use the right mode for the right task — and stay in control of the output.
+The goal is not to use AI more. It's to use the right surface for the right task — and stay in control of the output.
 
 <!-- end_slide -->
 
 # Questions?
 
-*Module 4 — Three Ways to Work with AI*
+*Late morning session — Copilot in Depth*

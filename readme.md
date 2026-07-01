@@ -89,13 +89,24 @@ Depending on how the team develops and what interests emerge, these areas are av
 
 ## Repository structure
 
+```
+module-01-foundations-standards/   Morning — shared vocabulary, LLMs, 3Cs, context as code
+module-02-copilot-in-depth/        Late morning — inline, Chat, terminal, PRD-driven
+module-03-sdlc-integration/        Afternoon — full lifecycle, conventions, security guardrails
+module-04-art-of-the-possible/     Late afternoon — agents, MCP, multi-agent, TDD harness
+demo-codebase/                     Laravel project used for hands-on exercises
+general_teaching/                  Shared teaching materials and style guide
+```
+
 Each module contains:
 
-- `slides.md` — Markdown Reveal.js-compatible slide deck
 - `presenterm_slides.md` — Presenterm-compatible slide deck
-- `exercises/README.md` — delegate-facing exercise instructions
+- `README.md` — module overview, objectives, and timing
+- `TEACHING_NOTES.md` — facilitator notes with demo sequences, common questions, and tips
+- `exercises/` — delegate-facing exercise instructions
+- `demos/` — facilitator demo notes and sample prompts (where applicable)
 
-`demo-codebase/` contains a Laravel project used for hands-on exercises. See `demo-codebase/TEACHING_NOTES.md` for setup and module mapping.
+`demo-codebase/` contains a Laravel project used from Module 2 onwards. See `demo-codebase/TEACHING_NOTES.md` for setup and module mapping.
 
 ```bash
 cd demo-codebase
