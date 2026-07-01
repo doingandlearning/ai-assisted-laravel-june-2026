@@ -96,6 +96,20 @@ public function saveUser(UserDto $dto): ValidationResult
 
 <!-- end_slide -->
 
+## Exercise: Signal test
+
+Open any file in your project. Pick a small method you haven't written yet — or write a throwaway one.
+
+**Round 1:** Type just the method name and an empty body. Trigger inline completion. Don't accept — note what it suggests.
+
+<!-- pause -->
+
+**Round 2:** Add a one-line comment above it describing exactly what it should do, including types and edge cases. Trigger again.
+
+**Type in chat:** what changed between round 1 and round 2 — and was round 2 good enough to accept?
+
+<!-- end_slide -->
+
 ## Copilot Chat
 
 A conversation with Copilot that has context about your workspace — open files, selected code, project structure.
@@ -152,6 +166,16 @@ What's the likely cause, and how do I fix it?
 <!-- pause -->
 
 **Discussion — type in chat:** you're using `/fix` on a `delete` method that has three problems — a missing null check, `Carbon::now()` instead of `Carbon::now('UTC')`, and a missing ownership check. Does Copilot catch all three, or does it prioritise? Which would you most want it to catch?
+
+<!-- end_slide -->
+
+## Exercise: Run the slash commands
+
+Pick a method in your own codebase — ideally one with at least one thing you already know is slightly off.
+
+Run `/explain` on it first, then run `/fix`.
+
+**Type in chat:** did `/fix` catch the thing you already knew about? Did it change anything you didn't ask it to?
 
 <!-- end_slide -->
 
@@ -379,6 +403,18 @@ It will. The question is how to recover without starting again.
 | Generating tests for a class | Chat `/tests` |
 | Building a feature across multiple files | PRD-driven |
 | Onboarding someone to a feature | PRD (spec as documentation) |
+
+<!-- end_slide -->
+
+## Exercise: One-feature spec
+
+Think of one small feature from your actual backlog — a single endpoint or method is enough.
+
+Write it as a PRD spec: stack, endpoint, request shape, behaviour, acceptance criteria.
+
+Paste it into Chat and generate just the first layer — the Form Request or equivalent.
+
+**Type in chat:** one acceptance criterion you had to make more specific once you tried to generate from it.
 
 <!-- end_slide -->
 

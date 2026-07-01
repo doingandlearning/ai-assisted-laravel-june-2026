@@ -96,6 +96,16 @@ The review is non-negotiable. An agent that produces working code is still produ
 
 <!-- end_slide -->
 
+## Exercise: Write the goal, not the steps
+
+Think of a small feature you've built manually before.
+
+Write it as a goal statement for an agent: the outcome, the constraints, and what "done" looks like. Don't list implementation steps — that's the agent's job.
+
+**Type in chat:** one constraint you had to spell out that you'd never need to say to a human colleague on your team.
+
+<!-- end_slide -->
+
 ## Where agents go wrong
 
 Agents fail in predictable ways:
@@ -119,6 +129,19 @@ Agents fail in predictable ways:
 <!-- pause -->
 
 **Mitigations:** clear goals, well-defined context files (AGENTS.md), explicit scope boundaries, checkpoints for human review.
+
+<!-- end_slide -->
+
+## Exercise: Spot the failure mode
+
+Match each scenario to a failure mode from the last slide — goal misinterpretation, context hallucination, runaway loops, or scope creep.
+
+<!-- incremental_lists: true -->
+1. Asked to fix a failing test, the agent is still trying twenty minutes later and the test still fails
+2. The agent added a `deleted_at` column and soft-delete logic nobody asked for, "since it seemed like good practice"
+3. The agent assumed the project uses Eloquent's default timestamps — this team disabled them everywhere
+
+**Type in chat:** your answers for 1–3.
 
 <!-- end_slide -->
 
@@ -261,6 +284,16 @@ Do not touch the test.
 ```
 
 The agent reads `TaskController.php`, implements the endpoint, runs the test, and iterates.
+
+<!-- end_slide -->
+
+## Exercise: Write a failing test for an agent
+
+Pick a small piece of behaviour you haven't built yet — real or invented.
+
+Write one Pest test that would fail because the feature doesn't exist. Make it specific enough that passing it *means* the feature is correct, not just present.
+
+**Type in chat:** is there any way the test could pass with obviously wrong code? If so, tighten it.
 
 <!-- end_slide -->
 

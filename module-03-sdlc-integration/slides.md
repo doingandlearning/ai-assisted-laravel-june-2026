@@ -79,6 +79,18 @@ Each step is a checkpoint. If the model uses the wrong fillable fields, fix it b
 
 <!-- end_slide -->
 
+## Exercise: Version test
+
+Ask AI to generate a small Eloquent model — pick anything — without mentioning a Laravel or PHP version.
+
+<!-- pause -->
+
+Then ask again, this time specifying "Laravel 11, PHP 8.3, constructor injection throughout."
+
+**Type in chat:** what specifically changed between the two outputs?
+
+<!-- end_slide -->
+
 ## When to generate, when to write
 
 | Generate with AI | Review carefully | Write manually |
@@ -149,6 +161,18 @@ Less reliable at: knowing which behaviour is intentional versus accidental. A nu
 <!-- pause -->
 
 **The question to ask after every refactor:** "Is there anything in the original code that looked wrong but was actually doing something important?" If you can't answer that, you need layer 4 of the explanation first.
+
+<!-- end_slide -->
+
+## Exercise: Refactor with a safety net
+
+Pick a small method from your own code — or use `OrderProcessor` from earlier if nothing's handy.
+
+1. Ask AI to generate tests for it as it stands now. Run them.
+2. Ask AI to refactor it, specifying that behaviour must stay identical.
+3. Run the same tests against the refactored version.
+
+**Type in chat:** did the tests pass first try, or did you have to fix the tests or the refactor?
 
 <!-- end_slide -->
 
@@ -261,6 +285,14 @@ AI produces consistent output when given consistent constraints. The inverse is 
 - Repository pattern — interfaces in `App\Repositories\Contracts\`
 - Test framework — Pest, Mockery, never `TestCase` classes
 - Naming — what your team calls things (services, DTOs, actions, etc.)
+
+<!-- end_slide -->
+
+## Exercise: Name one unwritten convention
+
+Think of one thing your team does consistently — a naming pattern, an injection style, a testing convention — that isn't written down anywhere an AI tool could read it.
+
+**Type in chat:** what is it, and where should it go?
 
 <!-- end_slide -->
 

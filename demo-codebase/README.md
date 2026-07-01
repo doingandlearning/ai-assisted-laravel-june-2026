@@ -1,58 +1,119 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Management API — Demo Codebase
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel 13 Task Management API used as the teaching vehicle for the *AI-Assisted Development for Laravel Teams* course.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
-
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
-
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
-
-## Learning Laravel
-
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
-
-In addition, [Laracasts](https://laracasts.com) contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
-
-You can also watch bite-sized lessons with real-world projects on [Laravel Learn](https://laravel.com/learn), where you will be guided through building a Laravel application from scratch while learning PHP fundamentals.
-
-## Agentic Development
-
-Laravel's predictable structure and conventions make it ideal for AI coding agents like Claude Code, Cursor, and GitHub Copilot. Install [Laravel Boost](https://laravel.com/docs/ai) to supercharge your AI workflow:
+## Setup
 
 ```bash
-composer require laravel/boost --dev
-
-php artisan boost:install
+composer install
+cp .env.example .env
+php artisan key:generate
+touch database/database.sqlite
+php artisan migrate
+php artisan serve
 ```
 
-Boost provides your agent 15+ tools and skills that help agents build Laravel applications while following best practices.
+API runs at `http://127.0.0.1:8000/api`.
 
-## Contributing
+Run the test suite:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+./vendor/bin/pest tests/Unit/TaskServiceTest.php
+```
 
-## Code of Conduct
+Expect **two failing tests** on first run. This is intentional — see demo notes below.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+---
 
-## Security Vulnerabilities
+## Architecture
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+routes/api.php
+    └─ TaskController          (thin — Form Requests, TaskResource, TaskService)
+           └─ TaskService      (business logic — has one intentional bug)
+                  └─ TaskRepositoryInterface
+                         └─ InMemoryTaskRepository  (JSON-backed — no database)
+                                └─ TaskItem         (plain PHP model, not Eloquent)
 
-## License
+Supporting:
+    Enums:         Priority, TaskStatus
+    Form Requests: StoreTaskRequest, UpdateTaskRequest
+    Resource:      TaskResource
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Tasks are stored in `storage/app/demo-tasks.json`. No database table. The standard Laravel `users` table exists for migrations practice, but the API has no authentication.
+
+---
+
+## API Endpoints
+
+| Method | Endpoint | Description |
+|---|---|---|
+| GET | `/api/tasks?owner_id=1` | List tasks for an owner (optional priority filter) |
+| GET | `/api/tasks/{id}` | Get a single task |
+| POST | `/api/tasks` | Create a task |
+| PATCH | `/api/tasks/{id}` | Update a task |
+| PATCH | `/api/tasks/{id}/archive` | Archive a task — **stub only, not implemented** |
+| DELETE | `/api/tasks/{id}` | Delete a task — **endpoint missing, used in PRD demo** |
+
+---
+
+## Intentional demo targets
+
+### Bug in `TaskService::update()` — Module 02 `/fix` demo
+
+`update()` never sets `completedAt` when a task transitions to `Done`. The condition only handles the reverse (Done → non-Done).
+
+```php
+// The bug: only clears, never sets
+if ($previousStatus === TaskStatus::Done && $parsedStatus !== TaskStatus::Done) {
+    $existing->completedAt = null;
+}
+```
+
+The test `it('sets completed_at when status set to done')` fails and is the target for the Copilot Chat `/fix` demo.
+
+### Incomplete `delete()` in `InMemoryTaskRepository` — Module 02 inline demo
+
+```php
+public function delete(int $id): bool
+{
+    // TODO: implement delete
+    // Good inline demo: let Copilot complete this from the method signature + context
+    throw new \BadMethodCallException('Delete is not implemented yet.');
+}
+```
+
+### Missing `archive()` in `TaskService` — Module 04 TDD harness demo
+
+`TaskService::archive()` is a stub that throws `BadMethodCallException`. Three tests in `describe('archive')` are failing. This is the agent TDD demo: hand the failing tests to an agent, observe it implement the method.
+
+### Missing DELETE endpoint — Module 02 PRD demo
+
+No `delete()` method on `TaskController` and no DELETE route. Used for the PRD-driven development exercise: delegates write a user story spec and generate the endpoint in layers.
+
+### `ReviewDemoController` — Module 03 code review demo
+
+`app/Http/Controllers/Api/ReviewDemoController.php` contains a controller with five deliberate problems for the code review demo. See inline comments.
+
+### `LegacyTaskManager` — Module 03 explanation demo
+
+`app/Legacy/LegacyTaskManager.php` is a pre-framework PHP class written in an older style. Used for the layered explanation demo (what does it do / why was it written this way / what's the modern equivalent / what breaks if I change it).
+
+---
+
+## Test suite
+
+```
+tests/Unit/TaskServiceTest.php   — Pest + Mockery unit tests for TaskService
+tests/Feature/ExampleTest.php    — Stock Laravel feature test (GET / returns 200)
+```
+
+On first run, expect:
+- `it('sets completed_at when status set to done')` — **FAILS** (planted bug in update)
+- `it('sets completed_at when transitioning to done from todo')` — **FAILS** (same bug)
+- All `describe('archive', ...)` tests — **FAIL** (method not implemented)
+
+All other tests pass.
